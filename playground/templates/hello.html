@@ -8,5 +8,10 @@
 </head>
 <body>
   <h1>Hello World</h1>
+  <ul>
+    {% for obj in queryset %}
+      <li>{{obj.title}}</li>
+    {% endfor %}
+  </ul>
 </body>
 </html>
