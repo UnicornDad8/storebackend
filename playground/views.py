@@ -1,16 +1,22 @@
 from django.shortcuts import render
-from django.db.models import Q, F
-from store.models import Product, Customer, Collection, Order, OrderItem
-from django.core.exceptions import ObjectDoesNotExist
+from django.db.models.aggregates import Count, Max, Min, Avg, Sum
+from store.models import Product, Order, OrderItem
 
 
 def say_hello(request):
-    # select_related(1)
-    # queryset = Product.objects.select_related('collection').all()
-    # prefetch_related(n)
-    # queryset = Product.objects.prefetch_related('promotions').select_related("collection").all()
+    # queryset = Product.objects.filter(collection__id=1).aggregate(count=Count('id'), min_price=Min('unit_price'))
 
-    # Exercise: Get the last 5 orders with their customer and items (including product)
-    queryset = Order.objects.select_related('customer').prefetch_related(
-        'orderitem_set__product').order_by('-placed_at')[:5]
+    # How many orders do we have?
+    # queryset = Order.objects.aggregate(count=Count("id"))
+
+    # How many units of product 1 have we sold?
+    # queryset = OrderItem.objects.filter(product__id=1).aggregate(units_sold=Sum("quantity"))
+
+    # How many orders has customer 1 placed?
+    # queryset = Order.objects.filter(customer__id=1).aggregate(count=Count("id"))
+
+    # What is the min, max and avg price of products in collection 1?
+    queryset = Product.objects.filter(collection__id=3).aggregate(min_price=Min(
+        "unit_price"), avg_price=Avg("unit_price"), max_price=Max("unit_price"))
+
     return render(request, "hello.html", {"queryset": queryset})
