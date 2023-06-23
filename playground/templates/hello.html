@@ -10,7 +10,7 @@
   <h1>Hello World</h1>
   <ul>
     {% for obj in queryset %}
-      <li>{{obj.title}}</li>
+      <li>{{obj.title}} ${{obj.unit_price}}</li>
     {% endfor %}
   </ul>
 </body>

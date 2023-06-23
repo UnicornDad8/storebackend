@@ -1,11 +1,11 @@
 from django.shortcuts import render
-from django.db.models import Q
+from django.db.models import Q, F
 from store.models import Product, Customer, Collection, Order, OrderItem
 from django.core.exceptions import ObjectDoesNotExist
 
 
 def say_hello(request):
-    # Products: inventory < 10 and unit price < 20
-    queryset = Product.objects.filter(Q(inventory__lt=10) & ~Q(unit_price__lt=20))
+    # queryset = Product.objects.only('id', 'title')
+    queryset = Product.objects.defer('description')
 
-    return render(request, "hello.html", {"queryset": list(queryset)})
+    return render(request, "hello.html", {"queryset": queryset})
